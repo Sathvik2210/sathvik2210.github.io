@@ -59,9 +59,13 @@ jobs:
           OWNER=$(echo "$REPO_FULL" | cut -d'/' -f1)
           NAME=$(echo "$REPO_FULL" | cut -d'/' -f2)
 
-          # For user/organization pages (OWNER.github.io), GitHub serves at "/"
+          # Normalize to lowercase for comparison so case differences don't break detection
+          OWNER_LOWER=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
+          NAME_LOWER=$(echo "$NAME" | tr '[:upper:]' '[:lower:]')
+
+          # For user/organization pages (owner.github.io), GitHub serves at "/"
           # For project pages, GitHub serves at "/<repo>/"
-          if [ "$NAME" = "${OWNER}.github.io" ]; then
+          if [ "$NAME_LOWER" = "${OWNER_LOWER}.github.io" ]; then
             BASE_PATH="/"
             echo "Detected user/organization site. Using base path: $BASE_PATH"
           else
